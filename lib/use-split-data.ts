@@ -9,11 +9,11 @@ export interface Person {
 
 export interface SplitData {
   type: 'split-bill' | 'split-equal'
+  tableId: string
   people: Person[]
   personTotals: { [personId: string]: number }
   grandTotal: number
   currency: string
-  // Solo para split-bill: asignaciones de items a personas
   itemAssignments?: { [itemId: string]: string[] }
 }
 

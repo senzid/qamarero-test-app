@@ -6,6 +6,7 @@ import Card from './Card';
 import GoToPayment from './GoToPayment';
 import PeopleSection from './PeopleSection';
 import { useSplitData } from '@/lib/use-split-data';
+import { formatCurrency } from '@/lib/format-currency';
 
 interface Person {
   id: string;
@@ -93,13 +94,14 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
   useEffect(() => {
     saveSplitData({
       type: 'split-bill',
+      tableId: billData.table.id,
       people,
       personTotals: calculations.personTotals,
       grandTotal: calculations.grandTotal,
       currency: billData.currency,
       itemAssignments,
     });
-  }, [people, calculations.personTotals, calculations.grandTotal, billData.currency, itemAssignments, saveSplitData]);
+  }, [people, calculations.personTotals, calculations.grandTotal, billData.currency, itemAssignments, saveSplitData,billData.table.id]);
 
   const addPerson = () => {
     const newId = String(people.length + 1);
@@ -154,13 +156,6 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
     });
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-ES', {
-      style: 'currency',
-      currency: billData.currency,
-    }).format(amount);
-  };
-
   return (
     <div className="space-y-6">
       <PeopleSection
@@ -206,11 +201,11 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
                     )}
                     <div className="mt-2 flex items-center gap-4">
                       <span className="text-lg font-bold text-slate-900">
-                        {formatCurrency(itemTotal)}
+                        {formatCurrency(itemTotal, billData.currency)}
                       </span>
                       {isFullyAssigned && (
                         <span className="text-sm text-green-700 font-medium">
-                          {formatCurrency(itemTotal / assignedPeople.length)} por persona
+                          {formatCurrency(itemTotal / assignedPeople.length, billData.currency)} por persona
                         </span>
                       )}
                     </div>
@@ -275,7 +270,7 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
               Total de la cuenta:
             </span>
             <span className="text-2xl font-bold text-slate-900">
-              {formatCurrency(calculations.grandTotal)}
+              {formatCurrency(calculations.grandTotal, billData.currency)}
             </span>
           </div>
         </div>
@@ -294,7 +289,7 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
                     {person.name}
                   </span>
                   <span className="text-xl font-bold text-slate-900">
-                    {formatCurrency(total)}
+                    {formatCurrency(total, billData.currency)}
                   </span>
                 </div>
               </div>

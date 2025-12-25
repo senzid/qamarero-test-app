@@ -6,6 +6,7 @@ import Card from './Card';
 import GoToPayment from './GoToPayment';
 import PeopleSection from './PeopleSection';
 import { useSplitData } from '@/lib/use-split-data';
+import { formatCurrency } from '@/lib/format-currency';
 
 interface Person {
   id: string;
@@ -58,12 +59,13 @@ export default function EqualSplitter({ billData }: { billData: BillData }) {
 
     saveSplitData({
       type: 'split-equal',
+      tableId: billData.table.id,
       people,
       personTotals,
       grandTotal: calculations.grandTotal,
       currency: billData.currency,
     });
-  }, [people, calculations, billData.currency, saveSplitData]);
+  }, [people, calculations, billData.currency, saveSplitData,billData.table.id]);
 
   const addPerson = () => {
     const newId = String(people.length + 1);
@@ -77,13 +79,6 @@ export default function EqualSplitter({ billData }: { billData: BillData }) {
   const removePerson = (id: string) => {
     if (people.length <= 1) return;
     setPeople(people.filter(p => p.id !== id));
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-ES', {
-      style: 'currency',
-      currency: billData.currency,
-    }).format(amount);
   };
 
   return (
@@ -107,7 +102,7 @@ export default function EqualSplitter({ billData }: { billData: BillData }) {
                 Total de la cuenta:
               </span>
               <span className="text-2xl font-bold text-slate-900">
-                {formatCurrency(calculations.grandTotal)}
+                {formatCurrency(calculations.grandTotal, billData.currency)}
               </span>
             </div>
             <div className="flex justify-between items-center pt-2 border-t border-slate-300">
@@ -115,7 +110,7 @@ export default function EqualSplitter({ billData }: { billData: BillData }) {
                 Por persona ({people.length}):
               </span>
               <span className="text-2xl font-bold text-green-600">
-                {formatCurrency(calculations.perPerson)}
+                {formatCurrency(calculations.perPerson, billData.currency)}
               </span>
             </div>
           </div>

@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import { getBillData } from '@/lib/get-data';
+import ClearSplitData from '@/components/ClearSplitData';
 
 export default async function SuccessPage() {
   const billData = await getBillData();
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <ClearSplitData />
       <div className="container mx-auto px-4 pt-4 pb-8 max-w-4xl">
         <Header tableData={billData.table} pathname="/success" />
         

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-
+import { formatCurrency } from '@/lib/format-currency';
 interface GoToPaymentProps {
   type: 'split-equal' | 'split-bill';
   disabled?: boolean;
@@ -8,12 +8,6 @@ interface GoToPaymentProps {
 }
 
 export default function GoToPayment({ type, disabled = false, unassignedTotal = 0, currency = 'EUR' }: GoToPaymentProps) {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-ES', {
-      style: 'currency',
-      currency: currency,
-    }).format(amount);
-  };
 
   const linkClassName = disabled
     ? "group block p-8 bg-slate-100 rounded-xl shadow-sm border-2 border-slate-300 cursor-not-allowed opacity-60"
@@ -43,7 +37,7 @@ export default function GoToPayment({ type, disabled = false, unassignedTotal = 
                 No puedes proceder al pago
               </p>
               <p className="text-sm text-amber-800">
-                Tienes {formatCurrency(unassignedTotal)} sin asignar. Por favor, asigna todos los items antes de continuar.
+                Tienes {formatCurrency(unassignedTotal, currency)} sin asignar. Por favor, asigna todos los items antes de continuar.
               </p>
             </div>
           </div>
