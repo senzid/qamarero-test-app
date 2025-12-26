@@ -1,19 +1,15 @@
 import { NextResponse } from 'next/server';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
+import { billRepository } from '@/lib/bill-repository';
 
 export async function GET() {
   try {
-
-    const filePath = join(process.cwd(), 'data', 'bill.json');
-    const fileContents = await readFile(filePath, 'utf-8');
-    const data = JSON.parse(fileContents);
-
+    const data = await billRepository.getBillData();
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching bill data:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch bill data';
     return NextResponse.json(
-      { error: 'Failed to fetch bill data' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

@@ -34,4 +34,4 @@ JSON data for this test.
 This is the domain layer. **The most important part of our application** as it contains the business logic. Each specific feature has its own directory and it contains all the components or functions to manage itself. 
 
 ### lib
-Contains generic types, generic functions or generic data fetching methods.
+Contains generic types, functions, validations or data fetching methods.

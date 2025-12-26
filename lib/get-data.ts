@@ -1,9 +1,8 @@
+import { clientEnv } from '@/lib/env.client';
+import { serverEnv } from '@/lib/env.server';
+
 export async function getBillData() {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-  
-  if (!baseUrl) {
-    throw new Error("Error al cargar datos globales: no hay API URL configurada");
-  }
+  const baseUrl = clientEnv.NEXT_PUBLIC_API_URL;
   
   try {
     const res = await fetch(`${baseUrl}/api/get-bill`, {
@@ -20,7 +19,7 @@ export async function getBillData() {
     const err = error as Error & { code?: string; cause?: { code?: string } };
     const errorCode = err.code || err.cause?.code;
     
-    if (process.env.NODE_ENV === 'production' && errorCode === 'ECONNREFUSED') {
+    if (serverEnv.NODE_ENV === 'production' && errorCode === 'ECONNREFUSED') {
       console.warn('No se pudo conectar al servidor durante el build. Los datos se cargarán en runtime.');
       return null;
     }
