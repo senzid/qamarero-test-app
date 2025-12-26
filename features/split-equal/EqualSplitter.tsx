@@ -2,9 +2,9 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import type { BillData } from '@/lib/types';
-import Card from './Card';
-import GoToPayment from './GoToPayment';
-import PeopleSection from './PeopleSection';
+import Card from '@/components/Card';
+import GoToPayment from '@/features/payment/GoToPayment';
+import PeopleSection from '@/components/PeopleSection';
 import { useSplitData } from '@/lib/use-split-data';
 import { formatCurrency } from '@/lib/format-currency';
 

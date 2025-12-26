@@ -1,8 +1,8 @@
 "use client"
 
 import { useSplitData } from '@/lib/use-split-data'
-import { PayButton } from './PayButton'
-import Card from './Card'
+import { PayButton } from '@/features/payment/PayButton'
+import Card from '@/components/Card'
 import { formatCurrency } from '@/lib/format-currency'
 
 export default function PaymentContent({ method }: { method: string }) {
