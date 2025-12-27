@@ -54,7 +54,7 @@ export default function Header ({
   const goBackHref = customGoBackUrl || goBackUrl
 
   return (
-    <header className="sticky top-0 z-50 bg-linear-to-br from-slate-50 to-slate-100/90 backdrop-blur-sm bg-opacity-95 border-b border-slate-200/50 mb-8 -mx-4 px-4 py-4">
+    <header className="sticky top-0 z-50 bg-linear-to-br from-slate-50 to-slate-100/90 backdrop-blur-sm bg-opacity-95 border-b border-slate-200/50 mb-4 -mx-4 px-4 pb-2">
       <div className="container mx-auto max-w-6xl">
         <div className="flex items-center gap-4 mb-3">
           {showBackButton && <BackButton goBackHref={goBackHref} />}

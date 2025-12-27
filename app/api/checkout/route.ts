@@ -68,13 +68,22 @@ export async function POST(req: Request) {
       })
     }
     
+    const splitDataJson = JSON.stringify({
+      people: splitData.people,
+      personTotals: splitData.personTotals,
+      currency: splitData.currency
+    })
+
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: lineItems,
       success_url: `${clientEnv.NEXT_PUBLIC_SITE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: cancelUrl,
       metadata: {
-        tableId: splitData.tableId 
+        tableId: splitData.tableId,
+        sendEmail: splitData.sendEmail ? 'true' : 'false',
+        tip: tip.toString(),
+        splitData: splitDataJson
       },
     })
 

@@ -6,6 +6,7 @@ import { PayButton } from '@/features/payment/PayButton'
 import Card from '@/components/Card'
 import { formatCurrency } from '@/lib/format-currency'
 import { Tips } from './Tips'
+import { GetEmailCheckbox } from './GetEmailCheckbox'
 
 function distributeTip(tip: number, numPeople: number): number[] {
   if (tip <= 0 || numPeople <= 0) {
@@ -28,6 +29,7 @@ function distributeTip(tip: number, numPeople: number): number[] {
 export default function PaymentContent({ method, initialTip }: { method: string, initialTip: number | null }) {
   const { splitData, isLoading } = useSplitData()
   const [tip, setTip] = useState<number | null>(initialTip)
+  const [sendEmail, setSendEmail] = useState(false)
 
   const tipDistribution = useMemo(() => {
     if (!tip || tip <= 0 || !splitData) {
@@ -103,7 +105,8 @@ export default function PaymentContent({ method, initialTip }: { method: string,
       {method === 'card' ?
         <div className="w-full space-y-4">
           <Tips tip={tip} setTip={setTip} />
-          <PayButton splitData={splitData} method={method} tip={tip} /> 
+          <GetEmailCheckbox checked={sendEmail} onChange={setSendEmail} />
+          <PayButton splitData={splitData} method={method} tip={tip} sendEmail={sendEmail} /> 
         </div>
       :
         <Card className="border border-slate-200">

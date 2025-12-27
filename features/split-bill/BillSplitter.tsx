@@ -53,7 +53,7 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
   const [people, setPeople] = useState<Person[]>(initialState.people);
   const [itemAssignments, setItemAssignments] = useState<ItemAssignment>(initialState.itemAssignments);
 
-  // Helper function to split an amount correctly using centimos
+  // Helper function to split an amount correctly using cents
   const splitAmount = (amount: number, numPeople: number): { [index: number]: number } => {
     if (numPeople === 0) return {};
     
@@ -70,18 +70,15 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
     return amounts;
   };
 
-  // Calculate totals
   const calculations = useMemo(() => {
     const itemTotals: { [itemId: string]: number } = {};
     const personTotals: { [personId: string]: number } = {};
     const itemPerPerson: { [itemId: string]: { min: number; max: number; hasRemainder: boolean } } = {};
     
-    // Initialize person totals
     people.forEach(person => {
       personTotals[person.id] = 0;
     });
 
-    // Calculate item totals and assign to people
     billData.items.forEach(item => {
       const total = item.qty * item.unitPrice;
       itemTotals[item.id] = total;
@@ -89,10 +86,8 @@ export default function BillSplitter({ billData }: { billData: BillData }) {
       const assignedPeople = itemAssignments[item.id] || [];
       
       if (assignedPeople.length > 0) {
-        // Split using centimos to avoid rounding errors
         const splitAmounts = splitAmount(total, assignedPeople.length);
         
-        // Calculate min/max for display
         const amounts = Object.values(splitAmounts);
         const min = Math.min(...amounts);
         const max = Math.max(...amounts);

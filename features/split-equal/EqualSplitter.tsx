@@ -52,20 +52,16 @@ export default function EqualSplitter({ billData }: { billData: BillData }) {
       };
     }
     
-    // Convertir a centimos para evitar errores de redondeo
     const totalCentimos = Math.round(grandTotal * 100);
     const baseCentimos = Math.floor(totalCentimos / people.length);
     const resto = totalCentimos % people.length;
     
-    // Calcular el monto por persona en euros
-    // Las primeras 'resto' personas pagarán 1 centimo más
     const personAmounts: { [personId: string]: number } = {};
     people.forEach((person, index) => {
       const centimos = baseCentimos + (index < resto ? 1 : 0);
       personAmounts[person.id] = centimos / 100;
     });
     
-    // Para mostrar, usar el promedio (aunque algunas personas pagarán 1 centimo más)
     const perPerson = baseCentimos / 100;
     const hasRemainder = resto > 0;
     const minAmount = baseCentimos / 100;
@@ -82,7 +78,6 @@ export default function EqualSplitter({ billData }: { billData: BillData }) {
   }, [billData.items, people]);
 
   useEffect(() => {
-    // Usar los montos exactos calculados en centimos
     const personTotals = calculations.personAmounts || {};
 
     saveSplitData({

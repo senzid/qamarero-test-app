@@ -2,9 +2,19 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import { getBillData } from '@/lib/get-data';
 import ClearSplitData from '@/components/ClearSplitData';
+import { sendPaymentEmailFromSession } from '@/features/payment/send-payment-email';
 
-export default async function SuccessPage() {
+export default async function SuccessPage({ searchParams }: { searchParams: Promise<{ session_id?: string }> }) {
   const billData = await getBillData();
+  const params = await searchParams;
+  const sessionId = params.session_id;
+
+
+  if (sessionId) {
+    sendPaymentEmailFromSession(sessionId).catch((error) => {
+      console.error('Error enviando email de pago:', error);
+    });
+  }
 
   return (
     <main className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100">

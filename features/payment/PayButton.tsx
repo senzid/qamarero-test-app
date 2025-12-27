@@ -6,9 +6,10 @@ interface PayButtonProps {
   splitData: SplitData
   method: string
   tip: number | null
+  sendEmail: boolean
 }
 
-export function PayButton({ splitData, method, tip }: PayButtonProps) {
+export function PayButton({ splitData, method, tip, sendEmail }: PayButtonProps) {
 
   const pay = async () => {
     const res = await fetch('/api/checkout', {
@@ -23,6 +24,7 @@ export function PayButton({ splitData, method, tip }: PayButtonProps) {
           personTotals: splitData.personTotals,
           grandTotal: splitData.grandTotal,
           tip: tip || 0,
+          sendEmail: sendEmail,
         },
       }),
     })

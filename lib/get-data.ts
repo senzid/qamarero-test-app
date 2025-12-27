@@ -13,9 +13,9 @@ export async function getBillData() {
 
     return res.json();
   } catch (error) {
-    // Durante el build estático, el servidor no está disponible
-    // Retornamos null para que el layout pueda manejar este caso
-    // En runtime, esto no ocurre ya que el servidor está disponible
+    // During static build, the server is not available
+    // Return null to let the layout handle this case
+    // In runtime, this does not happen because the server is available
     const err = error as Error & { code?: string; cause?: { code?: string } };
     const errorCode = err.code || err.cause?.code;
     

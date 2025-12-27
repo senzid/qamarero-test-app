@@ -23,7 +23,7 @@ export function useSplitData() {
   const [splitData, setSplitDataState] = useState<SplitData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Cargar desde sessionStorage al montar
+  // Load from sessionStorage when mounting
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -39,7 +39,7 @@ export function useSplitData() {
     }
   }, [])
 
-  // Función para guardar datos
+  // Function to save data
   const saveSplitData = useCallback((data: SplitData) => {
     if (typeof window !== 'undefined') {
       try {
@@ -51,7 +51,7 @@ export function useSplitData() {
     }
   }, [])
 
-  // Función para limpiar datos
+  // Function to clear data
   const clearSplitData = useCallback(() => {
     if (typeof window !== 'undefined') {
       sessionStorage.removeItem(STORAGE_KEY)
