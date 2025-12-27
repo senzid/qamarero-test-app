@@ -56,7 +56,7 @@ export default function HomeOptions({ billData }: HomeOptionsProps) {
               Cada uno lo suyo
             </h3>
             <p className="text-slate-600 mb-4">
-              Asigna cada item de la cuenta a las personas que lo consumieron. Pago personalizado por persona.
+              Asigna cada item a las personas que lo consumieron. Pago personalizado por persona.
             </p>
             <div className="mt-6 inline-flex items-center text-blue-600 font-semibold group-hover:translate-x-1 transition-transform">
               Continuar
