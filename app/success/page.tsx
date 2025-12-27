@@ -12,7 +12,13 @@ export default async function SuccessPage({ searchParams }: { searchParams: Prom
 
   if (sessionId) {
     sendPaymentEmailFromSession(sessionId).catch((error) => {
-      console.error('Error enviando email de pago:', error);
+      // Log detallado para debugging en Vercel
+      console.error('[EMAIL ERROR] Error enviando email de pago:', {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        sessionId,
+        timestamp: new Date().toISOString(),
+      });
     });
   }
 
