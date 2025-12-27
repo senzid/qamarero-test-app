@@ -1,15 +1,15 @@
-import nodemailer from 'nodemailer';
-import Mail from 'nodemailer/lib/mailer';
+import nodemailer from 'nodemailer'
+import Mail from 'nodemailer/lib/mailer'
 
 interface EmailProps {
-  email:string,
-  subject:string,
-  htmlTemplate:string,
+  email: string
+  subject: string
+  htmlTemplate: string
 }
 
-export async function sendSplitedBillEmail({email, subject, htmlTemplate}:EmailProps) {
-  const emailUser = process.env.EMAIL_USER_CONFIG;
-  const emailPassword = process.env.PASSWORD_APP_CONFIG;
+export async function sendSplitedBillEmail({ email, subject, htmlTemplate }: EmailProps) {
+  const emailUser = process.env.EMAIL_USER_CONFIG
+  const emailPassword = process.env.PASSWORD_APP_CONFIG
 
   console.log('[EMAIL] Verificando credenciales:', {
     hasEmailUser: !!emailUser,
@@ -25,26 +25,28 @@ export async function sendSplitedBillEmail({email, subject, htmlTemplate}:EmailP
     throw new Error(errorMsg)
   }
 
- const transport = nodemailer.createTransport({
-    service: 'gmail',
-    /* 
-      setting service as 'gmail' is same as providing these setings:
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true
-  */
+  const transport = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
       user: emailUser,
       pass: emailPassword,
     },
-  });
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
+    pool: true,
+    maxConnections: 1,
+    maxMessages: 3,
+  })
 
   const mailOptions: Mail.Options = {
     from: emailUser,
     to: email,
     subject: subject,
-    html:htmlTemplate,
-  };
+    html: htmlTemplate,
+  }
 
   try {
     console.log('[EMAIL] Enviando email con nodemailer...')
@@ -53,6 +55,7 @@ export async function sendSplitedBillEmail({email, subject, htmlTemplate}:EmailP
       messageId: result.messageId,
       response: result.response,
     })
+    transport.close()
   } catch (error) {
     const errorDetails: Record<string, unknown> = {
       error: error instanceof Error ? error.message : String(error),
@@ -67,6 +70,7 @@ export async function sendSplitedBillEmail({email, subject, htmlTemplate}:EmailP
     }
     
     console.error('[EMAIL] Error de nodemailer:', errorDetails)
+    transport.close()
     throw error
   }
 }

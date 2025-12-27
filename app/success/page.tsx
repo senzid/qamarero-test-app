@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import { getBillData } from '@/lib/get-data';
 import ClearSplitData from '@/components/ClearSplitData';
-import { sendPaymentEmailFromSession } from '@/features/payment/send-payment-email';
+import { clientEnv } from '@/lib/env.client';
 
 export default async function SuccessPage({ searchParams }: { searchParams: Promise<{ session_id?: string }> }) {
   const billData = await getBillData();
@@ -11,11 +11,13 @@ export default async function SuccessPage({ searchParams }: { searchParams: Prom
 
 
   if (sessionId) {
-    sendPaymentEmailFromSession(sessionId).catch((error) => {
-      // Log detallado para debugging en Vercel
-      console.error('[EMAIL ERROR] Error enviando email de pago:', {
+    fetch(`${clientEnv.NEXT_PUBLIC_SITE_URL}/api/send-payment-email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId }),
+    }).catch((error) => {
+      console.error('[EMAIL ERROR] Error llamando API route:', {
         error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
         sessionId,
         timestamp: new Date().toISOString(),
       });

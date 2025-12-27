@@ -10,36 +10,29 @@ const stripe = new Stripe(serverEnv.STRIPE_SECRET_KEY)
  * Envía el email de confirmación de pago basado en la sesión de Stripe
  */
 export async function sendPaymentEmailFromSession(sessionId: string): Promise<void> {
-  console.log('[EMAIL] Iniciando envío de email para sesión:', sessionId)
   
   const session = await stripe.checkout.sessions.retrieve(sessionId)
 
   if (session.payment_status !== 'paid') {
-    console.warn('[EMAIL] Pago no completado, status:', session.payment_status)
-    throw new Error('El pago no ha sido completado')
+    console.warn('[EMAIL] Payment status is not paid:', session.payment_status)
+    throw new Error('Payment is not completed')
   }
 
   const sendEmail = session.metadata?.sendEmail === 'true'
   if (!sendEmail) {
-    console.log('[EMAIL] Email no solicitado por el usuario')
     return
   }
   
-  console.log('[EMAIL] Email solicitado, procediendo con el envío')
-
   const customerEmail = session.customer_email || session.customer_details?.email
   if (!customerEmail) {
-    throw new Error('No se encontró el email del cliente')
+    throw new Error('Customer email not found')
   }
 
   const billData = await billRepository.getBillData()
   const splitDataJson = session.metadata?.splitData
   if (!splitDataJson) {
-    throw new Error('No se encontraron datos de división')
+    throw new Error('No split data found')
   }
-
-  console.log('[EMAIL] Datos de división encontrados:', splitDataJson)
-  console.log('[EMAIL] Datos de división encontrados:', billData)
 
   const splitData = JSON.parse(splitDataJson)
   const { people, personTotals, currency } = splitData
@@ -138,15 +131,13 @@ export async function sendPaymentEmailFromSession(sessionId: string): Promise<vo
   `
 
   try {
-    console.log('[EMAIL] Enviando email a:', customerEmail)
     await sendSplitedBillEmail({
       email: customerEmail,
       subject: `Detalles del pago - ${billData.table.name}`,
       htmlTemplate: emailHtml
     })
-    console.log('[EMAIL] Email enviado exitosamente a:', customerEmail)
   } catch (error) {
-    console.error('[EMAIL] Error en sendSplitedBillEmail:', {
+    console.error('[EMAIL] Error in sendSplitedBillEmail:', {
       error: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
       customerEmail,
